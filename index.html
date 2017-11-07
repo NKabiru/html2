@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 2 Code Sample</title>
+    <style>
+    #div1{
+        width: 350px;
+        height: 70px;
+        padding: 10px;
+        border: 1px solid #aaaaaa;
+    }
+    </style>
+</head>
+<body>
+    <div>
+        <h4>HTML Video</h4>
+        <video src="./video.mp4" height="270" width="540" controls></video>
+        <h4>HTML Audio</h4>
+        <audio src="./audio.mp3" controls></audio>
+        <h4>Data in Local Storage</h4>
+        <div id="output"></div>
+        <h4>Coordinates</h4>
+        <button onclick="getLocation()">Get Location</button>
+        <p id="demo"></p>
+        <div id="map"></div>
+    </div>
+
+    <div>
+        <p>Odd Numbers:<output id="result"></output></p>
+        <button onclick="stopWorker()">Stop</button>
+    </div>
+    <h4>Drag and Drop</h4>
+    <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <br>
+    <img id="drag1" src="image.jpg" draggable="true" ondragstart="drag(event)" width="336" height="69">
+    <script>
+        
+
+        // Drag and drop
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+        }
+        // Geolocation
+        var x = document.getElementById("demo");
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else { 
+                window.alert("Geolocation is not supported by this browser.");
+            }
+        }
+        function showPosition(position) {
+            x.innerHTML = "Latitude: " + position.coords.latitude + 
+            "<br>Longitude: " + position.coords.longitude;
+        }
+
+        // Local Storage
+        localStorage.setItem("name","Technology");
+        document.getElementById("output").innerHTML = localStorage.getItem("name");
+
+        // Workers
+        if(typeof(Worker) !== "undefined"){
+            if (typeof(worker) == "undefined") {
+            var worker = new Worker('./worker.js');
+            worker.onmessage = function (event){
+            document.getElementById('result').innerHTML = event.data;
+        };
+        } else {
+            document.getElementById('result').innerHTML = "No web worker";
+        }
+        
+        }
+        function stopWorker() {
+            worker.terminate();
+            worker = undefined;
+        }
+    </script>
+</body>
+</html>
